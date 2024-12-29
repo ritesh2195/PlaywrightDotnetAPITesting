@@ -10,9 +10,6 @@
 *.userosscache
 *.sln.docstates
 
-# Ignore Reports folder
-Reports/
-
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 

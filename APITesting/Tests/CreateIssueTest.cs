@@ -1,5 +1,4 @@
 ﻿using APITesting.Models;
-using Bogus;
 using Microsoft.Playwright;
 using static APITesting.Models.JiraIssueModel;
 
@@ -23,13 +22,13 @@ namespace APITesting.Tests
                 }
             };
 
-            IAPIResponse createIssueResponse = await issueAPI.CreateIssueAsync(issuePayload);
+            IAPIResponse createIssueResponse = await issueServices.CreateIssueAsync(issuePayload);
 
             Assert.That(createIssueResponse.Status, Is.EqualTo(201));
 
             string createIssueId = (await createIssueResponse.JsonAsync()).Value.GetProperty("id").ToString();
 
-            IAPIResponse getIssueResponse = await issueAPI.GetIssueDetailsAsync(createIssueId);
+            IAPIResponse getIssueResponse = await issueServices.GetIssueDetailsAsync(createIssueId);
 
             Assert.That(getIssueResponse.Status, Is.EqualTo(200));
 
@@ -39,7 +38,7 @@ namespace APITesting.Tests
 
             Assert.That(issuePayload.Fields.Description, Is.EqualTo(getIssueJsonResponse.Value.GetProperty("fields").GetProperty("description").ToString()));
 
-            Assert.That((await issueAPI.DeleteIssueAsync(createIssueId)).Status, Is.EqualTo(204));
+            Assert.That((await issueServices.DeleteIssueAsync(createIssueId)).Status, Is.EqualTo(204));
         }
     }
 }

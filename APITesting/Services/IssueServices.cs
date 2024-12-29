@@ -6,7 +6,7 @@ using System.Text;
 
 namespace APITesting.APIServices
 {
-    public class JiraIssueAPI
+    public class IssueServices
     {
 
         private IPlaywright? _playwright;
@@ -35,12 +35,12 @@ namespace APITesting.APIServices
 
         public async Task<IAPIResponse> GetIssueDetailsAsync(string issueId)
         {
-            return await _apiRequestContext.GetAsync($"{JiraEndPointConstants.IssueEndPoint}/{issueId}");
+            return await _apiRequestContext.GetAsync($"{EndPointConstants.IssueEndPoint}/{issueId}");
         }
 
         public async Task<IAPIResponse> CreateIssueAsync(Object payload)
         {
-            return await _apiRequestContext.PostAsync($"{JiraEndPointConstants.IssueEndPoint}/", new APIRequestContextOptions()
+            return await _apiRequestContext.PostAsync($"{EndPointConstants.IssueEndPoint}/", new APIRequestContextOptions()
             {
                 Headers = new Dictionary<string, string>()
                 {
@@ -52,7 +52,7 @@ namespace APITesting.APIServices
 
         public async Task<IAPIResponse> DeleteIssueAsync(string issueId)
         {
-            return await _apiRequestContext.DeleteAsync($"{JiraEndPointConstants.IssueEndPoint}/{issueId}");
+            return await _apiRequestContext.DeleteAsync($"{EndPointConstants.IssueEndPoint}/{issueId}");
         }
     }
 }

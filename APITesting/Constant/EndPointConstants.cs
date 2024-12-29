@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace APITesting.Constant
 {
-    public static class JiraEndPointConstants
+    public static class EndPointConstants
     {
         public const string IssueEndPoint = "/rest/api/2/issue";
     }
