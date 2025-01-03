@@ -23,8 +23,6 @@ namespace APITesting.Tests
 
             issueServices = new IssueServices();
 
-            await issueServices.InitializeIssueAPIAsync();
-
             faker = new Faker();
         }
 

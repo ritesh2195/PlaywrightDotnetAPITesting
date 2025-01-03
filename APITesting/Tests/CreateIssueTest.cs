@@ -6,8 +6,11 @@ namespace APITesting.Tests
 {
     public class CreateIssueTest : BaseTest
     {
+        private static string? createIssueKey;
+        private static string? createIssueId;
 
         [Test]
+        [Order(0)]
         public async Task CreateNewIssue()
         {
             var issuePayload = new JiraIssueModel
@@ -26,19 +29,35 @@ namespace APITesting.Tests
 
             Assert.That(createIssueResponse.Status, Is.EqualTo(201));
 
-            string createIssueId = (await createIssueResponse.JsonAsync()).Value.GetProperty("id").ToString();
+            createIssueKey = (await createIssueResponse.JsonAsync()).Value.GetProperty("key").ToString();
 
-            IAPIResponse getIssueResponse = await issueServices.GetIssueDetailsAsync(createIssueId);
+            createIssueId = (await createIssueResponse.JsonAsync()).Value.GetProperty("id").ToString();
+
+            IAPIResponse getIssueResponse = await issueServices.GetIssueDetailsAsync(createIssueKey);
 
             Assert.That(getIssueResponse.Status, Is.EqualTo(200));
 
             var getIssueJsonResponse = await getIssueResponse.JsonAsync();
 
-            Assert.That(createIssueId, Is.EqualTo(getIssueJsonResponse.Value.GetProperty("id").ToString()));
+            Assert.That(createIssueKey, Is.EqualTo(getIssueJsonResponse.Value.GetProperty("key").ToString()));
 
             Assert.That(issuePayload.Fields.Description, Is.EqualTo(getIssueJsonResponse.Value.GetProperty("fields").GetProperty("description").ToString()));
+        }
 
-            Assert.That((await issueServices.DeleteIssueAsync(createIssueId)).Status, Is.EqualTo(204));
+        [Test]
+        [Order(1)]
+        public async Task AddCommentTest()
+        {
+            var commentResponse = await issueServices.AddCommentOnIssue(createIssueId, new IssueComment { Body = faker.Random.Words(5) });
+
+            Assert.That(commentResponse.Status,Is.EqualTo(201));
+        }
+
+        [Test]
+        [Order(2)]
+        public async Task DeleteIssueTest()
+        {
+            Assert.That((await issueServices.DeleteIssueAsync(createIssueKey)).Status, Is.EqualTo(204));
         }
     }
 }
