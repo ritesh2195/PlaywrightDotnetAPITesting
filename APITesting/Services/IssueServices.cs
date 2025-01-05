@@ -2,6 +2,7 @@
 using APITesting.Utils;
 using EcommercePlaywrightAutomation.Config;
 using Microsoft.Playwright;
+using System.Net.Http.Headers;
 using System.Text;
 
 namespace APITesting.APIServices
@@ -24,7 +25,7 @@ namespace APITesting.APIServices
 
             Dictionary<string, string> headers = new Dictionary<string, string>();
 
-            headers.Add("Content-Type", "application/json");
+            //headers.Add("Content-Type", "application/json");
 
             headers.Add("Authorization", token);
 
@@ -65,6 +66,30 @@ namespace APITesting.APIServices
                 new APIRequestContextOptions
                 {
                     DataObject = payload
+                });
+        }
+
+        public async Task<IAPIResponse> AddAttachmentOnIssue(string issueId, string filePath)
+        {
+
+            var multipart =_apiRequestContext.Result.CreateFormData();
+
+            multipart.Append("file", new FilePayload()
+            {
+                Name = Path.GetFileName(filePath),
+                MimeType = "image/jpeg",
+                Buffer = File.ReadAllBytes(filePath)
+            });
+
+            return await _apiRequestContext.Result.PostAsync($"{EndPointConstants.IssueEndPoint}/{issueId}/attachments",
+                new APIRequestContextOptions
+                {
+                    Headers = new Dictionary<string, string>()
+                {
+                    {"X-Atlassian-Token","nocheck" }
+                },
+                 Multipart = multipart
+                 
                 });
         }
     }

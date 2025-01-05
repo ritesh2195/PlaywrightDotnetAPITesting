@@ -1,10 +1,11 @@
 ﻿using APITesting.Models;
 using Microsoft.Playwright;
+using System.Reflection;
 using static APITesting.Models.JiraIssueModel;
 
 namespace APITesting.Tests
 {
-    public class CreateIssueTest : BaseTest
+    public class IssueTest : BaseTest
     {
         private static string? createIssueKey;
         private static string? createIssueId;
@@ -55,6 +56,21 @@ namespace APITesting.Tests
 
         [Test]
         [Order(2)]
+        public async Task AddAttachmentTest()
+        {
+            string attachmentPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "TestData", "jpg.jpg");
+
+            attachmentPath = Path.GetFullPath(attachmentPath);
+
+            var attachmentResponse = await issueServices.AddAttachmentOnIssue(createIssueKey, attachmentPath);
+
+            Console.WriteLine(await attachmentResponse.TextAsync());
+
+            Assert.That(attachmentResponse.Status, Is.EqualTo(200));
+        }
+
+        [Test]
+        [Order(3)]
         public async Task DeleteIssueTest()
         {
             Assert.That((await issueServices.DeleteIssueAsync(createIssueKey)).Status, Is.EqualTo(204));
