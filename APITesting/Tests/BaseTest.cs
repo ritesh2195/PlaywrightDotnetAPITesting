@@ -1,4 +1,5 @@
 ﻿using APITesting.APIServices;
+using APITesting.Driver;
 using APITesting.Utils;
 using AventStack.ExtentReports;
 using Bogus;
@@ -21,9 +22,13 @@ namespace APITesting.Tests
 
             ExtentReportUtil.CreateTest(TestContext.CurrentContext.Test.Name);
 
-            issueServices = new IssueServices();
-
             faker = new Faker();
+
+            var driver = new PlaywrightAPIDriver();
+
+            await driver.InitializePlaywrightAPIDriver();
+
+            issueServices = new IssueServices(PlaywrightAPIDriver.GetDriver());
         }
 
         [TearDown]

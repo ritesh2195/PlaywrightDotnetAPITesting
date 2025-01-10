@@ -9,60 +9,36 @@ namespace APITesting.APIServices
 {
     public class IssueServices
     {
-        private readonly Task<IAPIRequestContext> _apiRequestContext;
 
-        public IssueServices()
+        private readonly IAPIRequestContext _requestContext;
+
+        public IssueServices(IAPIRequestContext requestContext)
         {
-            _apiRequestContext = Task.Run(InitializeIssueAPIAsync);
+            _requestContext = requestContext;
 
-        }
-
-        private async Task<IAPIRequestContext> InitializeIssueAPIAsync()
-        {
-            var configData = ConfigReader.ReadConfig();
-
-            string token = "Basic " + Convert.ToBase64String(Encoding.UTF8.GetBytes($"{configData.Email}:{configData.ApiKey}"));
-
-            Dictionary<string, string> headers = new Dictionary<string, string>();
-
-            //headers.Add("Content-Type", "application/json");
-
-            headers.Add("Authorization", token);
-
-            var playwright = await Playwright.CreateAsync();
-
-            return await playwright.APIRequest.NewContextAsync(new APIRequestNewContextOptions()
-            {
-                BaseURL = configData.BaseUrl,
-                ExtraHTTPHeaders = HeaderUtil.GetHeader()
-            });
         }
 
         public async Task<IAPIResponse> GetIssueDetailsAsync(string key)
         {
-            return await _apiRequestContext.Result.GetAsync($"{EndPointConstants.IssueEndPoint}/{key}");
+            return await _requestContext.GetAsync($"{EndPointConstants.IssueEndPoint}/{key}");
         }
 
         public async Task<IAPIResponse> CreateIssueAsync(Object payload)
         {
-            return await _apiRequestContext.Result.PostAsync($"{EndPointConstants.IssueEndPoint}/", new APIRequestContextOptions()
+            return await _requestContext.PostAsync($"{EndPointConstants.IssueEndPoint}/", new APIRequestContextOptions()
             {
-                Headers = new Dictionary<string, string>()
-                {
-                    {"User-Agent","abc" }
-                },
                 DataObject = payload
             });
         }
 
         public async Task<IAPIResponse> DeleteIssueAsync(string key)
         {
-            return await _apiRequestContext.Result.DeleteAsync($"{EndPointConstants.IssueEndPoint}/{key}");
+            return await _requestContext.DeleteAsync($"{EndPointConstants.IssueEndPoint}/{key}");
         }
 
         public async Task<IAPIResponse> AddCommentOnIssue(string issueId, Object payload)
         {
-            return await _apiRequestContext.Result.PostAsync($"{EndPointConstants.IssueEndPoint}/{issueId}/comment",
+            return await _requestContext.PostAsync($"{EndPointConstants.IssueEndPoint}/{issueId}/comment",
                 new APIRequestContextOptions
                 {
                     DataObject = payload
@@ -72,7 +48,7 @@ namespace APITesting.APIServices
         public async Task<IAPIResponse> AddAttachmentOnIssue(string issueId, string filePath)
         {
 
-            var multipart =_apiRequestContext.Result.CreateFormData();
+            var multipart = _requestContext.CreateFormData();
 
             multipart.Append("file", new FilePayload()
             {
@@ -81,7 +57,7 @@ namespace APITesting.APIServices
                 Buffer = File.ReadAllBytes(filePath)
             });
 
-            return await _apiRequestContext.Result.PostAsync($"{EndPointConstants.IssueEndPoint}/{issueId}/attachments",
+            return await _requestContext.PostAsync($"{EndPointConstants.IssueEndPoint}/{issueId}/attachments",
                 new APIRequestContextOptions
                 {
                     Headers = new Dictionary<string, string>()
