@@ -1,9 +1,5 @@
 ﻿using APITesting.Constant;
-using APITesting.Utils;
-using EcommercePlaywrightAutomation.Config;
 using Microsoft.Playwright;
-using System.Net.Http.Headers;
-using System.Text;
 
 namespace APITesting.APIServices
 {
@@ -64,8 +60,8 @@ namespace APITesting.APIServices
                 {
                     {"X-Atlassian-Token","nocheck" }
                 },
-                 Multipart = multipart
-                 
+                    Multipart = multipart
+
                 });
         }
     }

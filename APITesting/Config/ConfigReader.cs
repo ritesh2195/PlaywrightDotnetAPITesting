@@ -7,7 +7,7 @@ namespace EcommercePlaywrightAutomation.Config
 {
     public static class ConfigReader
     {
-        public static TestSetting ReadConfig()
+        public static TestSettings ReadConfig()
         {
             var configFile = File.ReadAllText(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "/appsetting.json");
 
@@ -18,7 +18,7 @@ namespace EcommercePlaywrightAutomation.Config
 
             jsonSerializerSettings.Converters.Add(new JsonStringEnumConverter());
 
-            return JsonSerializer.Deserialize<TestSetting>(configFile, jsonSerializerSettings);
+            return JsonSerializer.Deserialize<TestSettings>(configFile, jsonSerializerSettings);
         }
     }
 }

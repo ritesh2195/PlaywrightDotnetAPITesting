@@ -5,6 +5,8 @@ using static APITesting.Models.JiraIssueModel;
 
 namespace APITesting.Tests
 {
+    [TestFixture]
+    [Parallelizable(ParallelScope.Self)]
     public class IssueTest : BaseTest
     {
         private static string? createIssueKey;

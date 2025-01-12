@@ -5,31 +5,54 @@ namespace APITesting.Utils
 {
     public static class ExtentReportUtil
     {
-        private static ExtentReports? extent;
+        private static ExtentReports? _extentReport;
+        private static ExtentTest? _extentTest;
 
         public static void InitializeReport(string reportPath)
         {
-            if (extent == null)
+            if (_extentReport == null)
             {
-                extent = new ExtentReports();
+                _extentReport = new ExtentReports();
                 var spark = new ExtentSparkReporter(reportPath);
-                extent.AttachReporter(spark);
+                _extentReport.AttachReporter(spark);
             }
         }
 
         public static ExtentTest CreateTest(string testName)
         {
-            if (extent == null)
+            if (_extentReport == null)
             {
                 throw new InvalidOperationException("ExtentReports has not been initialized.");
             }
 
-            return extent.CreateTest(testName);
+            _extentTest =_extentReport.CreateTest(testName);
+
+            return _extentTest;
         }
 
         public static void FlushReport()
         {
-            extent?.Flush();
+            _extentReport?.Flush();
+        }
+
+        public static void LogPass(string details)
+        {
+            if (_extentTest == null)
+            {
+                throw new InvalidOperationException("No active test. Use StartTest to begin a test.");
+            }
+
+            _extentTest.Pass(details);
+        }
+
+        public static void LogFail(string details)
+        {
+            if (_extentTest == null)
+            {
+                throw new InvalidOperationException("No active test. Use StartTest to begin a test.");
+            }
+
+            _extentTest.Fail(details);
         }
     }
 }

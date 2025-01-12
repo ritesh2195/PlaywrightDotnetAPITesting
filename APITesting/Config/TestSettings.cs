@@ -1,6 +1,6 @@
 ﻿namespace APITesting.Config
 {
-    public class TestSetting
+    public class TestSettings
     {
         public string? BaseUrl { get; set; }
 

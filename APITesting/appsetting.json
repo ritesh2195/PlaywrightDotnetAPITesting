@@ -1,6 +1,6 @@
 ﻿{
-  "baseUrl": "your_base_url",
-  "email": "your_email",
-  "apiKey": "your_api_key"
+  "BaseUrl": "your_base_url",
+  "Email": "your_email",
+  "ApiKey": "your_api_key"
 
 }
